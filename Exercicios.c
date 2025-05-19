@@ -1900,3 +1900,81 @@ int main() {
 
 //Exercicio 23
 
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct No {
+    int dado;
+    struct No *prox;
+} No;
+
+No *criar_no(int dado) {
+    No *novo = (No *)malloc(sizeof(No));
+    novo->dado = dado;
+    novo->prox = NULL;
+    return novo;
+}
+
+No *rotacionar_lista(No *head, int k) {
+    if (head == NULL || head->prox == NULL || k == 0) return head;
+
+    No *atual = head;
+    int tamanho = 1;
+    while (atual->prox != NULL) {
+        atual = atual->prox;
+        tamanho++;
+    }
+
+    k = k % tamanho;
+    if (k == 0) return head;
+
+    atual->prox = head;
+    atual = head;
+    for (int i = 0; i < tamanho - k - 1; i++) {
+        atual = atual->prox;
+    }
+
+    No *nova_head = atual->prox;
+    atual->prox = NULL;
+    return nova_head;
+}
+
+void imprimir_lista(No *lista) {
+    while (lista != NULL) {
+        printf("%d ", lista->dado);
+        lista = lista->prox;
+    }
+    printf("\n");
+}
+
+void liberar_lista(No *lista) {
+    No *temp;
+    while (lista != NULL) {
+        temp = lista;
+        lista = lista->prox;
+        free(temp);
+    }
+}
+
+int main() {
+    No *lista = criar_no(1);
+    lista->prox = criar_no(2);
+    lista->prox->prox = criar_no(3);
+    lista->prox->prox->prox = criar_no(4);
+    lista->prox->prox->prox->prox = criar_no(5);
+
+    printf("Lista original: ");
+    imprimir_lista(lista);
+
+    int k = 2;
+    lista = rotacionar_lista(lista, k);
+
+    printf("Lista rotacionada em %d posições: ", k);
+    imprimir_lista(lista);
+
+    liberar_lista(lista);
+
+    return 0;
+}
+
+//Exercicio 24
