@@ -3,6 +3,7 @@
 #include <stdbool.h>
 #include <string.h>
 #include <ctype.h>
+#include <limits.h>
 
 //Exercicío 1
 typedef struct No {
@@ -1819,9 +1820,6 @@ int main() {
 
 //Exercicio 22
 
-#include <stdio.h>
-#include <stdlib.h>
-
 typedef struct No {
     int dado;
     struct No *prox;
@@ -1900,9 +1898,6 @@ int main() {
 
 //Exercicio 23
 
-#include <stdio.h>
-#include <stdlib.h>
-
 typedef struct No {
     int dado;
     struct No *prox;
@@ -1979,10 +1974,6 @@ int main() {
 
 //Exercicio 24
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <limits.h>
-
 typedef struct No {
     int valor;
     int min_ate_agora;
@@ -2054,9 +2045,6 @@ int main() {
 
 //Exercicio 25
 
-#include <stdio.h>
-#include <stdlib.h>
-
 typedef struct {
     int *arr;
     int tamanho;
@@ -2121,11 +2109,6 @@ int main() {
 }
 
 //Exercicio 26
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <ctype.h>
 
 typedef struct No {
     int valor;
@@ -2197,3 +2180,82 @@ int main() {
 }
 
 //Exercicio 27
+
+typedef struct No {
+    int dado;
+    struct No *prox;
+} No;
+
+typedef struct {
+    No *topo;
+} Pilha;
+
+Pilha* criar_pilha() {
+    Pilha *p = (Pilha*)malloc(sizeof(Pilha));
+    p->topo = NULL;
+    return p;
+}
+
+void push(Pilha *p, int valor) {
+    No *novo = (No*)malloc(sizeof(No));
+    novo->dado = valor;
+    novo->prox = p->topo;
+    p->topo = novo;
+}
+
+int pop(Pilha *p) {
+    if (p->topo == NULL) return -1;
+    No *temp = p->topo;
+    int valor = temp->dado;
+    p->topo = temp->prox;
+    free(temp);
+    return valor;
+}
+
+int esta_vazia(Pilha *p) {
+    return p->topo == NULL;
+}
+
+typedef struct {
+    Pilha *pilha_entrada;
+    Pilha *pilha_saida;
+} Fila;
+
+Fila* criar_fila() {
+    Fila *f = (Fila*)malloc(sizeof(Fila));
+    f->pilha_entrada = criar_pilha();
+    f->pilha_saida = criar_pilha();
+    return f;
+}
+
+void enfileirar(Fila *f, int valor) {
+    push(f->pilha_entrada, valor);
+}
+
+int desenfileirar(Fila *f) {
+    if (esta_vazia(f->pilha_saida)) {
+        while (!esta_vazia(f->pilha_entrada)) {
+            push(f->pilha_saida, pop(f->pilha_entrada));
+        }
+    }
+    return pop(f->pilha_saida);
+}
+
+int main() {
+    Fila *f = criar_fila();
+    enfileirar(f, 1);
+    enfileirar(f, 2);
+    enfileirar(f, 3);
+
+    printf("%d ", desenfileirar(f));
+    printf("%d ", desenfileirar(f));
+
+    enfileirar(f, 4);
+    printf("%d ", desenfileirar(f));
+    printf("%d\n", desenfileirar(f));
+
+    return 0;
+}
+
+//Exercicio 28
+
