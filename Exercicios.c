@@ -1247,3 +1247,80 @@ int main() {
 
 //Exercicio 15
 
+#define TAMANHO_MAX 100
+
+typedef struct {
+    int elementos[TAMANHO_MAX];
+    int frente;
+    int tras;
+    int tamanho;
+} FilaCircular;
+
+void inicializar(FilaCircular *f) {
+    f->frente = 0;
+    f->tras = -1;
+    f->tamanho = 0;
+}
+
+bool esta_vazia(FilaCircular *f) {
+    return f->tamanho == 0;
+}
+
+bool esta_cheia(FilaCircular *f) {
+    return f->tamanho == TAMANHO_MAX;
+}
+
+void enfileirar(FilaCircular *f, int valor) {
+    if (esta_cheia(f)) {
+        printf("Erro: Fila cheia!\n");
+        return;
+    }
+    f->tras = (f->tras + 1) % TAMANHO_MAX;
+    f->elementos[f->tras] = valor;
+    f->tamanho++;
+}
+
+int desenfileirar(FilaCircular *f) {
+    if (esta_vazia(f)) {
+        printf("Erro: Fila vazia!\n");
+        return -1;
+    }
+    int valor = f->elementos[f->frente];
+    f->frente = (f->frente + 1) % TAMANHO_MAX;
+    f->tamanho--;
+    return valor;
+}
+
+int frente(FilaCircular *f) {
+    if (esta_vazia(f)) {
+        printf("Erro: Fila vazia!\n");
+        return -1;
+    }
+    return f->elementos[f->frente];
+}
+
+int main() {
+    FilaCircular fila;
+    inicializar(&fila);
+
+    enfileirar(&fila, 10);
+    enfileirar(&fila, 20);
+    enfileirar(&fila, 30);
+
+    printf("Frente: %d\n", frente(&fila));
+    printf("Desenfileirar: %d\n", desenfileirar(&fila));
+    printf("Desenfileirar: %d\n", desenfileirar(&fila));
+    printf("Frente: %d\n", frente(&fila));
+
+    enfileirar(&fila, 40);
+    enfileirar(&fila, 50);
+
+    printf("Desenfileirar: %d\n", desenfileirar(&fila));
+    printf("Desenfileirar: %d\n", desenfileirar(&fila));
+    printf("Desenfileirar: %d\n", desenfileirar(&fila));
+
+    return 0;
+}
+
+//Exercicio 16
+
