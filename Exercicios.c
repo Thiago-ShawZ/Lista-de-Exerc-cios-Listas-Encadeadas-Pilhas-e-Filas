@@ -2259,3 +2259,81 @@ int main() {
 
 //Exercicio 28
 
+typedef struct No {
+    int dado;
+    struct No *prox;
+} No;
+
+No* criar_no(int dado) {
+    No *novo = (No*)malloc(sizeof(No));
+    novo->dado = dado;
+    novo->prox = NULL;
+    return novo;
+}
+
+No* inverter_grupos(No *head, int k) {
+    No *atual = head;
+    No *anterior = NULL;
+    No *proximo = NULL;
+    int contador = 0;
+    
+    No *temp = atual;
+    while (temp != NULL && contador < k) {
+        temp = temp->prox;
+        contador++;
+    }
+    if (contador < k) return head;
+    
+    contador = 0;
+    while (atual != NULL && contador < k) {
+        proximo = atual->prox;
+        atual->prox = anterior;
+        anterior = atual;
+        atual = proximo;
+        contador++;
+    }
+    
+    if (proximo != NULL) {
+        head->prox = inverter_grupos(proximo, k);
+    }
+    
+    return anterior;
+}
+
+void imprimir_lista(No *lista) {
+    while (lista != NULL) {
+        printf("%d ", lista->dado);
+        lista = lista->prox;
+    }
+    printf("\n");
+}
+
+void liberar_lista(No *lista) {
+    No *temp;
+    while (lista != NULL) {
+        temp = lista;
+        lista = lista->prox;
+        free(temp);
+    }
+}
+
+int main() {
+    No *lista = criar_no(1);
+    lista->prox = criar_no(2);
+    lista->prox->prox = criar_no(3);
+    lista->prox->prox->prox = criar_no(4);
+    lista->prox->prox->prox->prox = criar_no(5);
+
+    printf("Lista original: ");
+    imprimir_lista(lista);
+
+    int k = 2;
+    lista = inverter_grupos(lista, k);
+
+    printf("Lista após inverter grupos de %d: ", k);
+    imprimir_lista(lista);
+
+    liberar_lista(lista);
+
+    return 0;
+}
