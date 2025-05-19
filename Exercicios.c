@@ -1626,3 +1626,49 @@ int main() {
 
 //Exercicio 19
 
+typedef struct No {
+    int dado;
+    struct No *prox;
+} No;
+
+int detectar_ciclo(No *head) {
+    if (head == NULL || head->prox == NULL) {
+        return 0;
+    }
+
+    No *slow = head;
+    No *fast = head->prox;
+
+    while (fast != NULL && fast->prox != NULL) {
+        if (slow == fast) {
+            return 1;
+        }
+        slow = slow->prox;
+        fast = fast->prox->prox;
+    }
+
+    return 0;
+}
+
+No* criar_no(int valor) {
+    No *novo = (No*)malloc(sizeof(No));
+    novo->dado = valor;
+    novo->prox = NULL;
+    return novo;
+}
+
+int main() {
+    No *head = criar_no(1);
+    head->prox = criar_no(2);
+    head->prox->prox = criar_no(3);
+    head->prox->prox->prox = criar_no(4);
+    
+    printf("Lista sem ciclo: %d\n", detectar_ciclo(head));
+    
+    head->prox->prox->prox->prox = head->prox;
+    printf("Lista com ciclo: %d\n", detectar_ciclo(head));
+    
+    return 0;
+}
+
+//Exercicio 20
