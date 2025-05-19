@@ -1503,3 +1503,126 @@ int main() {
 }
 
 //Exercicio 18
+
+#define MAX_SIZE 100
+
+typedef struct {
+    int elementos[MAX_SIZE];
+    int frente;
+    int tras;
+    int tamanho;
+} Fila;
+
+typedef struct {
+    int elementos[MAX_SIZE];
+    int topo;
+} Pilha;
+
+void inicializar_fila(Fila *f) {
+    f->frente = 0;
+    f->tras = -1;
+    f->tamanho = 0;
+}
+
+void inicializar_pilha(Pilha *p) {
+    p->topo = -1;
+}
+
+int fila_vazia(Fila *f) {
+    return f->tamanho == 0;
+}
+
+int fila_cheia(Fila *f) {
+    return f->tamanho == MAX_SIZE;
+}
+
+int pilha_vazia(Pilha *p) {
+    return p->topo == -1;
+}
+
+int pilha_cheia(Pilha *p) {
+    return p->topo == MAX_SIZE - 1;
+}
+
+void enfileirar(Fila *f, int valor) {
+    if (!fila_cheia(f)) {
+        f->tras = (f->tras + 1) % MAX_SIZE;
+        f->elementos[f->tras] = valor;
+        f->tamanho++;
+    }
+}
+
+int desenfileirar(Fila *f) {
+    if (!fila_vazia(f)) {
+        int valor = f->elementos[f->frente];
+        f->frente = (f->frente + 1) % MAX_SIZE;
+        f->tamanho--;
+        return valor;
+    }
+    return -1;
+}
+
+void empilhar(Pilha *p, int valor) {
+    if (!pilha_cheia(p)) {
+        p->elementos[++p->topo] = valor;
+    }
+}
+
+int desempilhar(Pilha *p) {
+    if (!pilha_vazia(p)) {
+        return p->elementos[p->topo--];
+    }
+    return -1;
+}
+
+void inverter_primeiros_k(Fila *f, int k) {
+    if (k <= 0 || k > f->tamanho) return;
+    
+    Pilha p;
+    inicializar_pilha(&p);
+    
+    for (int i = 0; i < k; i++) {
+        empilhar(&p, desenfileirar(f));
+    }
+    
+    while (!pilha_vazia(&p)) {
+        enfileirar(f, desempilhar(&p));
+    }
+    
+    for (int i = 0; i < f->tamanho - k; i++) {
+        enfileirar(f, desenfileirar(f));
+    }
+}
+
+void imprimir_fila(Fila *f) {
+    int pos = f->frente;
+    for (int i = 0; i < f->tamanho; i++) {
+        printf("%d ", f->elementos[pos]);
+        pos = (pos + 1) % MAX_SIZE;
+    }
+    printf("\n");
+}
+
+int main() {
+    Fila f;
+    inicializar_fila(&f);
+    
+    enfileirar(&f, 10);
+    enfileirar(&f, 20);
+    enfileirar(&f, 30);
+    enfileirar(&f, 40);
+    enfileirar(&f, 50);
+    
+    printf("Fila original: ");
+    imprimir_fila(&f);
+    
+    inverter_primeiros_k(&f, 3);
+    
+    printf("Fila após inverter os primeiros 3: ");
+    imprimir_fila(&f);
+    
+    return 0;
+}
+
+//Exercicio 19
+
