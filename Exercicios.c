@@ -1672,3 +1672,76 @@ int main() {
 }
 
 //Exercicio 20
+
+typedef struct No {
+    int valor;
+    struct No *prox;
+} No;
+
+No* criar_no(int valor) {
+    No *novo = (No*)malloc(sizeof(No));
+    novo->valor = valor;
+    novo->prox = NULL;
+    return novo;
+}
+
+No* unir_listas_ordenadas(No *lista1, No *lista2) {
+    No dummy; // Nó temporário para simplificar o código
+    No *atual = &dummy;
+    dummy.prox = NULL;
+
+    while (lista1 != NULL && lista2 != NULL) {
+        if (lista1->valor <= lista2->valor) {
+            atual->prox = lista1;
+            lista1 = lista1->prox;
+        } else {
+            atual->prox = lista2;
+            lista2 = lista2->prox;
+        }
+        atual = atual->prox;
+    }
+
+    // Anexa os elementos restantes
+    if (lista1 != NULL) {
+        atual->prox = lista1;
+    } else {
+        atual->prox = lista2;
+    }
+
+    return dummy.prox;
+}
+
+void imprimir_lista(No *lista) {
+    while (lista != NULL) {
+        printf("%d ", lista->valor);
+        lista = lista->prox;
+    }
+    printf("\n");
+}
+
+int main() {
+    // Criando lista1: 1 -> 3 -> 5
+    No *lista1 = criar_no(1);
+    lista1->prox = criar_no(3);
+    lista1->prox->prox = criar_no(5);
+
+    // Criando lista2: 2 -> 4 -> 6
+    No *lista2 = criar_no(2);
+    lista2->prox = criar_no(4);
+    lista2->prox->prox = criar_no(6);
+
+    printf("Lista 1: ");
+    imprimir_lista(lista1);
+    printf("Lista 2: ");
+    imprimir_lista(lista2);
+
+    No *lista_unida = unir_listas_ordenadas(lista1, lista2);
+    printf("Lista unida: ");
+    imprimir_lista(lista_unida);
+
+    return 0;
+}
+
+//Exercicio 21
+
+
