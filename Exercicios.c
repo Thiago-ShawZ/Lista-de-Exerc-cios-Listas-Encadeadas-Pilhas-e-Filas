@@ -1686,7 +1686,7 @@ No* criar_no(int valor) {
 }
 
 No* unir_listas_ordenadas(No *lista1, No *lista2) {
-    No dummy; // Nó temporário para simplificar o código
+    No dummy; 
     No *atual = &dummy;
     dummy.prox = NULL;
 
@@ -1701,7 +1701,6 @@ No* unir_listas_ordenadas(No *lista1, No *lista2) {
         atual = atual->prox;
     }
 
-    // Anexa os elementos restantes
     if (lista1 != NULL) {
         atual->prox = lista1;
     } else {
@@ -1720,12 +1719,11 @@ void imprimir_lista(No *lista) {
 }
 
 int main() {
-    // Criando lista1: 1 -> 3 -> 5
+
     No *lista1 = criar_no(1);
     lista1->prox = criar_no(3);
     lista1->prox->prox = criar_no(5);
 
-    // Criando lista2: 2 -> 4 -> 6
     No *lista2 = criar_no(2);
     lista2->prox = criar_no(4);
     lista2->prox->prox = criar_no(6);
@@ -1744,4 +1742,77 @@ int main() {
 
 //Exercicio 21
 
+typedef struct No {
+    int valor;
+    struct No *prox;
+} No;
 
+No* criar_no(int valor) {
+    No *novo = (No*)malloc(sizeof(No));
+    novo->valor = valor;
+    novo->prox = NULL;
+    return novo;
+}
+
+No* remover_todas_ocorrencias(No *head, int valor) {
+    No *atual = head;
+    No *anterior = NULL;
+    No *temp;
+    
+    while (atual != NULL) {
+        if (atual->valor == valor) {
+            if (anterior == NULL) {
+                
+                temp = atual;
+                head = atual->prox;
+                atual = head;
+                free(temp);
+            } else {
+                
+                temp = atual;
+                anterior->prox = atual->prox;
+                atual = atual->prox;
+                free(temp);
+            }
+        } else {
+            anterior = atual;
+            atual = atual->prox;
+        }
+    }
+    
+    return head;
+}
+
+void imprimir_lista(No *lista) {
+    while (lista != NULL) {
+        printf("%d ", lista->valor);
+        lista = lista->prox;
+    }
+    printf("\n");
+}
+
+int main() {
+    No *lista = criar_no(1);
+    lista->prox = criar_no(2);
+    lista->prox->prox = criar_no(3);
+    lista->prox->prox->prox = criar_no(2);
+    lista->prox->prox->prox->prox = criar_no(4);
+    lista->prox->prox->prox->prox->prox = criar_no(2);
+    lista->prox->prox->prox->prox->prox->prox = criar_no(5);
+
+    printf("Lista original: ");
+    imprimir_lista(lista);
+
+    lista = remover_todas_ocorrencias(lista, 2);
+
+    printf("Lista após remoção: ");
+    imprimir_lista(lista);
+
+    while (lista != NULL) {
+        No *temp = lista;
+        lista = lista->prox;
+        free(temp);
+    }
+
+    return 0;
+}
