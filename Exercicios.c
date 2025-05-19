@@ -1978,3 +1978,79 @@ int main() {
 }
 
 //Exercicio 24
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <limits.h>
+
+typedef struct No {
+    int valor;
+    int min_ate_agora;
+    struct No *prox;
+} No;
+
+typedef struct {
+    No *topo;
+} Pilha;
+
+Pilha *criar_pilha() {
+    Pilha *p = (Pilha*)malloc(sizeof(Pilha));
+    p->topo = NULL;
+    return p;
+}
+
+void push(Pilha *p, int valor) {
+    No *novo = (No*)malloc(sizeof(No));
+    novo->valor = valor;
+    novo->min_ate_agora = (p->topo == NULL) ? valor : (valor < p->topo->min_ate_agora ? valor : p->topo->min_ate_agora);
+    novo->prox = p->topo;
+    p->topo = novo;
+}
+
+void pop(Pilha *p) {
+    if (p->topo == NULL) return;
+    No *temp = p->topo;
+    p->topo = p->topo->prox;
+    free(temp);
+}
+
+int top(Pilha *p) {
+    if (p->topo == NULL) return INT_MIN;
+    return p->topo->valor;
+}
+
+int obter_minimo(Pilha *p) {
+    if (p->topo == NULL) return INT_MIN;
+    return p->topo->min_ate_agora;
+}
+
+void liberar_pilha(Pilha *p) {
+    while (p->topo != NULL) {
+        pop(p);
+    }
+    free(p);
+}
+
+int main() {
+    Pilha *p = criar_pilha();
+    
+    push(p, 5);
+    push(p, 3);
+    push(p, 8);
+    push(p, 2);
+    push(p, 4);
+
+    printf("Topo: %d\n", top(p));
+    printf("Mínimo: %d\n", obter_minimo(p));
+    
+    pop(p);
+    printf("Topo após pop: %d\n", top(p));
+    printf("Mínimo após pop: %d\n", obter_minimo(p));
+    
+    liberar_pilha(p);
+    
+    return 0;
+}
+
+//Exercicio 25
+
