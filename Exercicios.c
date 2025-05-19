@@ -716,3 +716,104 @@ int main() {
 
 //Exercicio 8
 
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct No {
+    int dado;
+    struct No *prox;
+} No;
+
+typedef struct Pilha {
+    int *elementos;
+    int topo;
+    int capacidade;
+} Pilha;
+
+No* criar_no(int valor) {
+    No *novo = (No*)malloc(sizeof(No));
+    novo->dado = valor;
+    novo->prox = NULL;
+    return novo;
+}
+
+Pilha* criar_pilha(int capacidade) {
+    Pilha *p = (Pilha*)malloc(sizeof(Pilha));
+    p->elementos = (int*)malloc(capacidade * sizeof(int));
+    p->topo = -1;
+    p->capacidade = capacidade;
+    return p;
+}
+
+void empilhar(Pilha *p, int valor) {
+    if (p->topo == p->capacidade - 1) {
+        printf("Pilha cheia!\n");
+        return;
+    }
+    p->elementos[++p->topo] = valor;
+}
+
+int desempilhar(Pilha *p) {
+    if (p->topo == -1) {
+        printf("Pilha vazia!\n");
+        return -1;
+    }
+    return p->elementos[p->topo--];
+}
+
+void imprimir_reverso(No *head) {
+    if (head == NULL) {
+        printf("Lista vazia!\n");
+        return;
+    }
+
+    int tamanho = 0;
+    No *atual = head;
+    while (atual != NULL) {
+        tamanho++;
+        atual = atual->prox;
+    }
+
+    Pilha *p = criar_pilha(tamanho);
+    atual = head;
+    while (atual != NULL) {
+        empilhar(p, atual->dado);
+        atual = atual->prox;
+    }
+
+    printf("Lista em reverso: ");
+    while (p->topo != -1) {
+        printf("%d ", desempilhar(p));
+    }
+    printf("\n");
+
+    free(p->elementos);
+    free(p);
+}
+
+int main() {
+    No *head = criar_no(1);
+    head->prox = criar_no(2);
+    head->prox->prox = criar_no(3);
+    head->prox->prox->prox = criar_no(4);
+
+    printf("Lista original: ");
+    No *atual = head;
+    while (atual != NULL) {
+        printf("%d ", atual->dado);
+        atual = atual->prox;
+    }
+    printf("\n");
+
+    imprimir_reverso(head);
+
+    free(head->prox->prox->prox);
+    free(head->prox->prox);
+    free(head->prox);
+    free(head);
+
+    return 0;
+}
+
+//Exercicio 9
+
