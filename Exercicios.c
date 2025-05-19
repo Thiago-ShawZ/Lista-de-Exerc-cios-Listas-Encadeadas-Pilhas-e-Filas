@@ -1148,3 +1148,102 @@ int main() {
 }
 
 //Exercicio 14
+
+#define MAX_SIZE 100
+
+typedef struct {
+    int itens[MAX_SIZE];
+    int topo;
+} Pilha;
+
+void inicializar(Pilha *p) {
+    p->topo = -1;
+}
+
+int esta_vazia(Pilha *p) {
+    return p->topo == -1;
+}
+
+int esta_cheia(Pilha *p) {
+    return p->topo == MAX_SIZE - 1;
+}
+
+void push(Pilha *p, int elemento) {
+    if (!esta_cheia(p)) {
+        p->itens[++p->topo] = elemento;
+    }
+}
+
+int pop(Pilha *p) {
+    if (!esta_vazia(p)) {
+        return p->itens[p->topo--];
+    }
+    return -1;
+}
+
+int topo(Pilha *p) {
+    if (!esta_vazia(p)) {
+        return p->itens[p->topo];
+    }
+    return -1;
+}
+
+void ordenar_pilha(Pilha *p) {
+    Pilha aux;
+    inicializar(&aux);
+    
+    while (!esta_vazia(p)) {
+        int temp = pop(p);
+        
+        while (!esta_vazia(&aux) && topo(&aux) > temp) {
+            push(p, pop(&aux));
+        }
+        
+        push(&aux, temp);
+    }
+    
+    while (!esta_vazia(&aux)) {
+        push(p, pop(&aux));
+    }
+}
+
+void imprimir_pilha(Pilha *p) {
+    Pilha temp;
+    inicializar(&temp);
+    
+    while (!esta_vazia(p)) {
+        int val = pop(p);
+        printf("%d ", val);
+        push(&temp, val);
+    }
+    
+    while (!esta_vazia(&temp)) {
+        push(p, pop(&temp));
+    }
+    printf("\n");
+}
+
+int main() {
+    Pilha p;
+    inicializar(&p);
+    
+    push(&p, 34);
+    push(&p, 3);
+    push(&p, 31);
+    push(&p, 98);
+    push(&p, 92);
+    push(&p, 23);
+    
+    printf("Pilha original: ");
+    imprimir_pilha(&p);
+    
+    ordenar_pilha(&p);
+    
+    printf("Pilha ordenada: ");
+    imprimir_pilha(&p);
+    
+    return 0;
+}
+
+//Exercicio 15
+
