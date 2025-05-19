@@ -1816,3 +1816,87 @@ int main() {
 
     return 0;
 }
+
+//Exercicio 22
+
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct No {
+    int dado;
+    struct No *prox;
+} No;
+
+No *criar_no(int dado) {
+    No *novo = (No *)malloc(sizeof(No));
+    novo->dado = dado;
+    novo->prox = NULL;
+    return novo;
+}
+
+No *encontrar_intersecao(No *lista1, No *lista2) {
+    if (lista1 == NULL || lista2 == NULL) return NULL;
+    
+    No *a = lista1;
+    No *b = lista2;
+    
+    while (a != b) {
+        a = a == NULL ? lista2 : a->prox;
+        b = b == NULL ? lista1 : b->prox;
+    }
+    
+    return a;
+}
+
+void imprimir_lista(No *lista) {
+    while (lista != NULL) {
+        printf("%d ", lista->dado);
+        lista = lista->prox;
+    }
+    printf("\n");
+}
+
+int main() {
+  
+    No *lista1 = criar_no(1);
+    lista1->prox = criar_no(2);
+    lista1->prox->prox = criar_no(3);
+    lista1->prox->prox->prox = criar_no(4);
+
+  
+    No *lista2 = criar_no(5);
+    lista2->prox = criar_no(6);
+    lista2->prox->prox = lista1->prox->prox; 
+
+    printf("Lista 1: ");
+    imprimir_lista(lista1);
+    printf("Lista 2: ");
+    imprimir_lista(lista2);
+
+    No *intersecao = encontrar_intersecao(lista1, lista2);
+
+    if (intersecao != NULL) {
+        printf("Interseção encontrada no nó com valor: %d\n", intersecao->dado);
+    } else {
+        printf("Não há interseção.\n");
+    }
+
+    
+    No *temp;
+    while (lista1 != intersecao) {
+        temp = lista1;
+        lista1 = lista1->prox;
+        free(temp);
+    }
+    while (lista2 != NULL) {
+        temp = lista2;
+        lista2 = lista2->prox;
+        if (temp == intersecao) break;
+        free(temp);
+    }
+
+    return 0;
+}
+
+//Exercicio 23
+
