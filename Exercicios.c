@@ -877,3 +877,79 @@ int main() {
 
 //Exercicio 10
 
+typedef struct No {
+    int dado;
+    struct No *prox;
+} No;
+
+typedef struct Pilha {
+    No *topo;
+} Pilha;
+
+Pilha* criar_pilha() {
+    Pilha *p = (Pilha*)malloc(sizeof(Pilha));
+    p->topo = NULL;
+    return p;
+}
+
+bool esta_vazia(Pilha *p) {
+    return p->topo == NULL;
+}
+
+void push(Pilha *p, int valor) {
+    No *novo = (No*)malloc(sizeof(No));
+    novo->dado = valor;
+    novo->prox = p->topo;
+    p->topo = novo;
+}
+
+int pop(Pilha *p) {
+    if (esta_vazia(p)) {
+        printf("Erro: Pilha vazia!\n");
+        return -1;
+    }
+    No *temp = p->topo;
+    int valor = temp->dado;
+    p->topo = temp->prox;
+    free(temp);
+    return valor;
+}
+
+int topo(Pilha *p) {
+    if (esta_vazia(p)) {
+        printf("Erro: Pilha vazia!\n");
+        return -1;
+    }
+    return p->topo->dado;
+}
+
+void liberar_pilha(Pilha *p) {
+    while (!esta_vazia(p)) {
+        pop(p);
+    }
+    free(p);
+}
+
+int main() {
+    Pilha *p = criar_pilha();
+
+    push(p, 10);
+    push(p, 20);
+    push(p, 30);
+
+    printf("Topo: %d\n", topo(p));  
+
+    printf("Elementos removidos: ");
+    while (!esta_vazia(p)) {
+        printf("%d ", pop(p));
+    }
+    printf("\n");  
+
+    printf("Tentativa de pop em pilha vazia: %d\n", pop(p));
+
+    liberar_pilha(p);
+    return 0;
+}
+
+//Exercicio 11
+
