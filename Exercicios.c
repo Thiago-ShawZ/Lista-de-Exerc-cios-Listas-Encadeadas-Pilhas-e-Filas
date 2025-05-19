@@ -1324,3 +1324,96 @@ int main() {
 
 //Exercicio 16
 
+typedef struct No {
+    int dado;
+    struct No *prox;
+} No;
+
+typedef struct {
+    No *inicio;
+    No *fim;
+} Fila;
+
+Fila* criar_fila() {
+    Fila *f = (Fila*)malloc(sizeof(Fila));
+    f->inicio = NULL;
+    f->fim = NULL;
+    return f;
+}
+
+bool esta_vazia(Fila *f) {
+    return f->inicio == NULL;
+}
+
+void enfileirar(Fila *f, int valor) {
+    No *novo = (No*)malloc(sizeof(No));
+    novo->dado = valor;
+    novo->prox = NULL;
+
+    if (esta_vazia(f)) {
+        f->inicio = novo;
+        f->fim = novo;
+    } else {
+        f->fim->prox = novo;
+        f->fim = novo;
+    }
+}
+
+int desenfileirar(Fila *f) {
+    if (esta_vazia(f)) {
+        printf("Erro: Fila vazia!\n");
+        return -1;
+    }
+
+    No *temp = f->inicio;
+    int valor = temp->dado;
+
+    f->inicio = f->inicio->prox;
+    if (f->inicio == NULL) {
+        f->fim = NULL;
+    }
+
+    free(temp);
+    return valor;
+}
+
+int frente(Fila *f) {
+    if (esta_vazia(f)) {
+        printf("Erro: Fila vazia!\n");
+        return -1;
+    }
+    return f->inicio->dado;
+}
+
+void liberar_fila(Fila *f) {
+    while (!esta_vazia(f)) {
+        desenfileirar(f);
+    }
+    free(f);
+}
+
+int main() {
+    Fila *f = criar_fila();
+
+    enfileirar(f, 10);
+    enfileirar(f, 20);
+    enfileirar(f, 30);
+
+    printf("Frente: %d\n", frente(f));
+    printf("Desenfileirar: %d\n", desenfileirar(f));
+    printf("Desenfileirar: %d\n", desenfileirar(f));
+
+    enfileirar(f, 40);
+    enfileirar(f, 50);
+
+    printf("Frente: %d\n", frente(f));
+    printf("Desenfileirar: %d\n", desenfileirar(f));
+    printf("Desenfileirar: %d\n", desenfileirar(f));
+    printf("Desenfileirar: %d\n", desenfileirar(f));
+
+    liberar_fila(f);
+    return 0;
+}
+
+//Exercicio 17
+
