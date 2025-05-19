@@ -1417,3 +1417,89 @@ int main() {
 
 //Exercicio 17
 
+typedef struct No {
+    char *binario;
+    struct No *prox;
+} No;
+
+typedef struct {
+    No *inicio;
+    No *fim;
+} Fila;
+
+Fila* criar_fila() {
+    Fila *f = (Fila*)malloc(sizeof(Fila));
+    f->inicio = NULL;
+    f->fim = NULL;
+    return f;
+}
+
+void enfileirar(Fila *f, const char *valor) {
+    No *novo = (No*)malloc(sizeof(No));
+    novo->binario = strdup(valor);
+    novo->prox = NULL;
+    
+    if (f->inicio == NULL) {
+        f->inicio = novo;
+        f->fim = novo;
+    } else {
+        f->fim->prox = novo;
+        f->fim = novo;
+    }
+}
+
+char* desenfileirar(Fila *f) {
+    if (f->inicio == NULL) return NULL;
+    
+    No *temp = f->inicio;
+    char *valor = temp->binario;
+    
+    f->inicio = f->inicio->prox;
+    if (f->inicio == NULL) {
+        f->fim = NULL;
+    }
+    
+    free(temp);
+    return valor;
+}
+
+void gerar_binarios(int N) {
+    if (N <= 0) return;
+    
+    Fila *f = criar_fila();
+    enfileirar(f, "1");
+    
+    for (int i = 0; i < N; i++) {
+        char *atual = desenfileirar(f);
+        printf("\"%s\"%s", atual, i < N-1 ? ", " : "");
+        
+        char *temp1 = (char*)malloc(strlen(atual) + 2);
+        char *temp2 = (char*)malloc(strlen(atual) + 2);
+        
+        strcpy(temp1, atual);
+        strcat(temp1, "0");
+        enfileirar(f, temp1);
+        
+        strcpy(temp2, atual);
+        strcat(temp2, "1");
+        enfileirar(f, temp2);
+        
+        free(atual);
+    }
+    
+    while (f->inicio != NULL) {
+        char *temp = desenfileirar(f);
+        free(temp);
+    }
+    free(f);
+}
+
+int main() {
+    int N = 5;
+    printf("Números binários para N=%d: [", N);
+    gerar_binarios(N);
+    printf("]\n");
+    return 0;
+}
+
+//Exercicio 18
