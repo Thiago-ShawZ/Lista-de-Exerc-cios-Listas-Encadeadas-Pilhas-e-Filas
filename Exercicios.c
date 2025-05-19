@@ -2122,3 +2122,78 @@ int main() {
 
 //Exercicio 26
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <ctype.h>
+
+typedef struct No {
+    int valor;
+    struct No *prox;
+} No;
+
+typedef struct {
+    No *topo;
+} Pilha;
+
+Pilha* criar_pilha() {
+    Pilha *p = (Pilha*)malloc(sizeof(Pilha));
+    p->topo = NULL;
+    return p;
+}
+
+void push(Pilha *p, int valor) {
+    No *novo = (No*)malloc(sizeof(No));
+    novo->valor = valor;
+    novo->prox = p->topo;
+    p->topo = novo;
+}
+
+int pop(Pilha *p) {
+    if (p->topo == NULL) return -1;
+    No *temp = p->topo;
+    int valor = temp->valor;
+    p->topo = temp->prox;
+    free(temp);
+    return valor;
+}
+
+int avaliar_posfixa(const char *expressao) {
+    Pilha *p = criar_pilha();
+    int i = 0;
+    while (expressao[i] != '\0') {
+        if (isdigit(expressao[i])) {
+            int num = 0;
+            while (isdigit(expressao[i])) {
+                num = num * 10 + (expressao[i] - '0');
+                i++;
+            }
+            push(p, num);
+        } else if (expressao[i] == ' ') {
+            i++;
+        } else {
+            int b = pop(p);
+            int a = pop(p);
+            switch (expressao[i]) {
+                case '+': push(p, a + b); break;
+                case '-': push(p, a - b); break;
+                case '*': push(p, a * b); break;
+                case '/': push(p, a / b); break;
+            }
+            i++;
+        }
+    }
+    int resultado = pop(p);
+    free(p);
+    return resultado;
+}
+
+int main() {
+    const char *expressao = "3 4 + 2 *";
+    int resultado = avaliar_posfixa(expressao);
+    printf("Expressão: \"%s\"\n", expressao);
+    printf("Resultado: %d\n", resultado);
+    return 0;
+}
+
+//Exercicio 27
