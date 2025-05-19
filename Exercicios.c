@@ -2054,3 +2054,71 @@ int main() {
 
 //Exercicio 25
 
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct {
+    int *arr;
+    int tamanho;
+    int topo1;
+    int topo2;
+} DuasPilhas;
+
+DuasPilhas* criar_duas_pilhas(int capacidade) {
+    DuasPilhas *dp = (DuasPilhas*)malloc(sizeof(DuasPilhas));
+    dp->tamanho = capacidade;
+    dp->arr = (int*)malloc(capacidade * sizeof(int));
+    dp->topo1 = -1;
+    dp->topo2 = capacidade;
+    return dp;
+}
+
+int push1(DuasPilhas *dp, int valor) {
+    if (dp->topo1 + 1 == dp->topo2) return 0;
+    dp->arr[++dp->topo1] = valor;
+    return 1;
+}
+
+int push2(DuasPilhas *dp, int valor) {
+    if (dp->topo2 - 1 == dp->topo1) return 0;
+    dp->arr[--dp->topo2] = valor;
+    return 1;
+}
+
+int pop1(DuasPilhas *dp) {
+    if (dp->topo1 == -1) return -1;
+    return dp->arr[dp->topo1--];
+}
+
+int pop2(DuasPilhas *dp) {
+    if (dp->topo2 == dp->tamanho) return -1;
+    return dp->arr[dp->topo2++];
+}
+
+void liberar_duas_pilhas(DuasPilhas *dp) {
+    free(dp->arr);
+    free(dp);
+}
+
+int main() {
+    DuasPilhas *dp = criar_duas_pilhas(5);
+
+    push1(dp, 10);
+    push1(dp, 20);
+    push2(dp, 30);
+    push2(dp, 40);
+    push2(dp, 50);
+
+    printf("Pop1: %d\n", pop1(dp));
+    printf("Pop1: %d\n", pop1(dp));
+    printf("Pop2: %d\n", pop2(dp));
+    printf("Pop2: %d\n", pop2(dp));
+    printf("Pop2: %d\n", pop2(dp));
+
+    liberar_duas_pilhas(dp);
+
+    return 0;
+}
+
+//Exercicio 26
+
