@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <string.h>
+#include <ctype.h>
 
 //Exercicío 1
 typedef struct No {
@@ -1085,3 +1086,65 @@ int main() {
 }
 
 //Exercicio 13
+
+#define MAX_SIZE 100
+
+typedef struct {
+    char itens[MAX_SIZE];
+    int topo;
+} Pilha;
+
+void inicializar(Pilha *p) {
+    p->topo = -1;
+}
+
+int esta_vazia(Pilha *p) {
+    return p->topo == -1;
+}
+
+void push(Pilha *p, char elemento) {
+    if (p->topo < MAX_SIZE - 1) {
+        p->itens[++p->topo] = elemento;
+    }
+}
+
+char pop(Pilha *p) {
+    if (!esta_vazia(p)) {
+        return p->itens[p->topo--];
+    }
+    return '\0';
+}
+
+int eh_palindromo(const char *str) {
+    Pilha p;
+    inicializar(&p);
+    int len = strlen(str);
+    int meio = len / 2;
+    
+    for (int i = 0; i < meio; i++) {
+        push(&p, tolower(str[i]));
+    }
+    
+    int inicio = meio + (len % 2);
+    for (int i = inicio; i < len; i++) {
+        if (tolower(str[i]) != pop(&p)) {
+            return 0;
+        }
+    }
+    
+    return 1;
+}
+
+int main() {
+    char texto1[] = "radar";
+    char texto2[] = "Anotaram a data da maratona";
+    char texto3[] = "hello";
+    
+    printf("%s: %s\n", texto1, eh_palindromo(texto1) ? "Sim" : "Não");
+    printf("%s: %s\n", texto2, eh_palindromo(texto2) ? "Sim" : "Não");
+    printf("%s: %s\n", texto3, eh_palindromo(texto3) ? "Sim" : "Não");
+    
+    return 0;
+}
+
+//Exercicio 14
