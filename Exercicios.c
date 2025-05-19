@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
 //Exercicío 1
 typedef struct No {
@@ -816,4 +817,63 @@ int main() {
 }
 
 //Exercicio 9
+
+#define TAMANHO_MAX 100
+
+int pilha[TAMANHO_MAX];
+int topo = -1;
+
+bool esta_vazia() {
+    return topo == -1;
+}
+
+bool esta_cheia() {
+    return topo == TAMANHO_MAX - 1;
+}
+
+void push(int valor) {
+    if (esta_cheia()) {
+        printf("Erro: Pilha cheia!\n");
+        return;
+    }
+    pilha[++topo] = valor;
+}
+
+int pop() {
+    if (esta_vazia()) {
+        printf("Erro: Pilha vazia!\n");
+        return -1;
+    }
+    return pilha[topo--];
+}
+
+int topo_pilha() {
+    if (esta_vazia()) {
+        printf("Erro: Pilha vazia!\n");
+        return -1;
+    }
+    return pilha[topo];
+}
+
+int main() {
+    
+    push(10);
+    push(20);
+    push(30);
+
+    printf("Topo: %d\n", topo_pilha()); 
+
+    printf("Elementos removidos: ");
+    while (!esta_vazia()) {
+        printf("%d ", pop());
+    }
+    printf("\n"); 
+
+    
+    printf("Tentativa de pop em pilha vazia: %d\n", pop());
+
+    return 0;
+}
+
+//Exercicio 10
 
