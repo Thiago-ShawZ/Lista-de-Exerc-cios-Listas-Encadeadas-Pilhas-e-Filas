@@ -2337,3 +2337,97 @@ int main() {
 
     return 0;
 }
+
+//Exercicio 29
+
+typedef struct No {
+    int dado;
+    struct No *prox;
+} No;
+
+No* criar_no(int dado) {
+    No *novo = (No*)malloc(sizeof(No));
+    novo->dado = dado;
+    novo->prox = NULL;
+    return novo;
+}
+
+No* inverter_lista(No *head) {
+    No *prev = NULL;
+    No *curr = head;
+    No *next = NULL;
+    while (curr != NULL) {
+        next = curr->prox;
+        curr->prox = prev;
+        prev = curr;
+        curr = next;
+    }
+    return prev;
+}
+
+int eh_palindromo(No *head) {
+    if (head == NULL || head->prox == NULL) return 1;
+
+    No *slow = head;
+    No *fast = head;
+    while (fast->prox != NULL && fast->prox->prox != NULL) {
+        slow = slow->prox;
+        fast = fast->prox->prox;
+    }
+
+    No *segunda_metade = inverter_lista(slow->prox);
+    No *primeira_metade = head;
+
+    while (segunda_metade != NULL) {
+        if (primeira_metade->dado != segunda_metade->dado) {
+            inverter_lista(slow->prox);
+            return 0;
+        }
+        primeira_metade = primeira_metade->prox;
+        segunda_metade = segunda_metade->prox;
+    }
+
+    inverter_lista(slow->prox);
+    return 1;
+}
+
+void imprimir_lista(No *lista) {
+    while (lista != NULL) {
+        printf("%d ", lista->dado);
+        lista = lista->prox;
+    }
+    printf("\n");
+}
+
+void liberar_lista(No *lista) {
+    No *temp;
+    while (lista != NULL) {
+        temp = lista;
+        lista = lista->prox;
+        free(temp);
+    }
+}
+
+int main() {
+    No *lista = criar_no(1);
+    lista->prox = criar_no(2);
+    lista->prox->prox = criar_no(3);
+    lista->prox->prox->prox = criar_no(2);
+    lista->prox->prox->prox->prox = criar_no(1);
+
+    printf("Lista: ");
+    imprimir_lista(lista);
+
+    if (eh_palindromo(lista)) {
+        printf("É palíndromo\n");
+    } else {
+        printf("Não é palíndromo\n");
+    }
+
+    printf("Lista restaurada: ");
+    imprimir_lista(lista);
+
+    liberar_lista(lista);
+
+    return 0;
+}
