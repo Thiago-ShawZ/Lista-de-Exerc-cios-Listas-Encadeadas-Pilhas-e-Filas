@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <string.h>
 
 //Exercicío 1
 typedef struct No {
@@ -1027,3 +1028,60 @@ int main() {
 
 //Exercicio 12
 
+#define MAX_SIZE 100
+
+typedef struct {
+    char itens[MAX_SIZE];
+    int topo;
+} Pilha;
+
+void inicializar(Pilha *p) {
+    p->topo = -1;
+}
+
+int esta_vazia(Pilha *p) {
+    return p->topo == -1;
+}
+
+int esta_cheia(Pilha *p) {
+    return p->topo == MAX_SIZE - 1;
+}
+
+void push(Pilha *p, char elemento) {
+    if (!esta_cheia(p)) {
+        p->itens[++p->topo] = elemento;
+    }
+}
+
+char pop(Pilha *p) {
+    if (!esta_vazia(p)) {
+        return p->itens[p->topo--];
+    }
+    return '\0';
+}
+
+void inverter_string(char *str) {
+    Pilha p;
+    inicializar(&p);
+    
+    for (int i = 0; str[i] != '\0'; i++) {
+        push(&p, str[i]);
+    }
+    
+    int i = 0;
+    while (!esta_vazia(&p)) {
+        str[i++] = pop(&p);
+    }
+}
+
+int main() {
+    char texto[] = "hello";
+    printf("Original: %s\n", texto);
+    
+    inverter_string(texto);
+    printf("Invertida: %s\n", texto);
+    
+    return 0;
+}
+
+//Exercicio 13
