@@ -652,3 +652,67 @@ int main() {
 }
 
 //Exercicio 7
+
+typedef struct No {
+    int dado;
+    struct No *prox;
+} No;
+
+No* encontrar_meio(No *head) {
+    if (head == NULL) {
+        return NULL;
+    }
+
+    No *slow = head;
+    No *fast = head;
+
+    while (fast != NULL && fast->prox != NULL) {
+        slow = slow->prox;
+        fast = fast->prox->prox;
+    }
+
+    return slow;
+}
+
+No* criar_no(int valor) {
+    No *novo = (No*)malloc(sizeof(No));
+    novo->dado = valor;
+    novo->prox = NULL;
+    return novo;
+}
+
+void imprimir_lista(No *head) {
+    No *atual = head;
+    while (atual != NULL) {
+        printf("%d -> ", atual->dado);
+        atual = atual->prox;
+    }
+    printf("NULL\n");
+}
+
+int main() {
+    No *head = criar_no(1);
+    head->prox = criar_no(2);
+    head->prox->prox = criar_no(3);
+    head->prox->prox->prox = criar_no(4);
+    head->prox->prox->prox->prox = criar_no(5);
+
+    printf("Lista: ");
+    imprimir_lista(head);
+
+    No *meio = encontrar_meio(head);
+    if (meio != NULL) {
+        printf("Nó do meio: %d\n", meio->dado);
+    }
+
+    free(head->prox->prox->prox->prox);
+    free(head->prox->prox->prox);
+    free(head->prox->prox);
+    free(head->prox);
+    free(head);
+
+    return 0;
+}
+
+//Exercicio 8
+
