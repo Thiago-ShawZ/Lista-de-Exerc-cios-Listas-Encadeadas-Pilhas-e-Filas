@@ -334,7 +334,7 @@ int main() {
     inserir_fim(&lista, 10);
     inserir_inicio(&lista, 5);
     inserir_fim(&lista, 20);
-    inserir_posicao(&lista, 15, 2);  // Insere 15 na posição 2
+    inserir_posicao(&lista, 15, 2); 
 
     imprimir_lista(lista);
 
@@ -478,11 +478,11 @@ int main() {
     inserir_fim(&lista, 10);
     inserir_inicio(&lista, 5);
     inserir_fim(&lista, 20);
-    inserir_posicao(&lista, 15, 2);  // Insere 15 na posição 2
+    inserir_posicao(&lista, 15, 2); 
 
     imprimir_lista(lista);
 
-    remover_valor(&lista, 10);  // Remove o valor 10 da lista
+    remover_valor(&lista, 10); 
 
     imprimir_lista(lista);
 
@@ -717,9 +717,6 @@ int main() {
 
 //Exercicio 8
 
-#include <stdio.h>
-#include <stdlib.h>
-
 typedef struct No {
     int dado;
     struct No *prox;
@@ -952,4 +949,81 @@ int main() {
 }
 
 //Exercicio 11
+
+typedef struct No {
+    char dado;
+    struct No *prox;
+} No;
+
+typedef struct Pilha {
+    No *topo;
+} Pilha;
+
+Pilha* criar_pilha() {
+    Pilha *p = (Pilha*)malloc(sizeof(Pilha));
+    p->topo = NULL;
+    return p;
+}
+
+bool esta_vazia(Pilha *p) {
+    return p->topo == NULL;
+}
+
+void push(Pilha *p, char valor) {
+    No *novo = (No*)malloc(sizeof(No));
+    novo->dado = valor;
+    novo->prox = p->topo;
+    p->topo = novo;
+}
+
+char pop(Pilha *p) {
+    if (esta_vazia(p)) {
+        return '\0';
+    }
+    No *temp = p->topo;
+    char valor = temp->dado;
+    p->topo = temp->prox;
+    free(temp);
+    return valor;
+}
+
+int verificar_balanceamento(const char *expressao) {
+    Pilha *p = criar_pilha();
+    int i = 0;
+    while (expressao[i] != '\0') {
+        if (expressao[i] == '(' || expressao[i] == '[' || expressao[i] == '{') {
+            push(p, expressao[i]);
+        } else if (expressao[i] == ')' || expressao[i] == ']' || expressao[i] == '}') {
+            char topo = pop(p);
+            if ((expressao[i] == ')' && topo != '(') ||
+                (expressao[i] == ']' && topo != '[') ||
+                (expressao[i] == '}' && topo != '{')) {
+                while (!esta_vazia(p)) {
+                    pop(p);
+                }
+                free(p);
+                return 0;
+            }
+        }
+        i++;
+    }
+    int balanceado = esta_vazia(p);
+    liberar_pilha(p);
+    return balanceado;
+}
+
+void liberar_pilha(Pilha *p) {
+    while (!esta_vazia(p)) {
+        pop(p);
+    }
+    free(p);
+}
+
+int main() {
+    printf("%d\n", verificar_balanceamento("({[]})"));
+    printf("%d\n", verificar_balanceamento("([)]"));
+    return 0;
+}
+
+//Exercicio 12
 
