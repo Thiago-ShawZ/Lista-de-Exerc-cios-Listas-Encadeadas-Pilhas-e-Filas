@@ -2431,3 +2431,64 @@ int main() {
 
     return 0;
 }
+
+//Exercicio 30
+
+typedef struct {
+    int *dados;
+    int topo;
+    int capacidade;
+} Pilha;
+
+Pilha* criar_pilha(int capacidade) {
+    Pilha *p = (Pilha*)malloc(sizeof(Pilha));
+    p->dados = (int*)malloc(capacidade * sizeof(int));
+    p->topo = -1;
+    p->capacidade = capacidade;
+    return p;
+}
+
+void push(Pilha *p, int valor) {
+    if (p->topo == p->capacidade - 1) return;
+    p->dados[++p->topo] = valor;
+}
+
+int pop(Pilha *p) {
+    if (p->topo == -1) return -1;
+    return p->dados[p->topo--];
+}
+
+int topo(Pilha *p) {
+    if (p->topo == -1) return -1;
+    return p->dados[p->topo];
+}
+
+int calcular_agua_retida(int *alturas, int n) {
+    Pilha *pilha = criar_pilha(n);
+    int agua = 0;
+    
+    for (int i = 0; i < n; i++) {
+        while (pilha->topo != -1 && alturas[i] > alturas[topo(pilha)]) {
+            int base = alturas[pop(pilha)];
+            if (pilha->topo == -1) break;
+            int distancia = i - topo(pilha) - 1;
+            int altura = (alturas[i] < alturas[topo(pilha)] ? alturas[i] : alturas[topo(pilha)]) - base;
+            agua += distancia * altura;
+        }
+        push(pilha, i);
+    }
+    
+    free(pilha->dados);
+    free(pilha);
+    return agua;
+}
+
+int main() {
+    int alturas[] = {0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1};
+    int n = sizeof(alturas) / sizeof(alturas[0]);
+    
+    int resultado = calcular_agua_retida(alturas, n);
+    printf("Água retida: %d\n", resultado);
+    
+    return 0;
+}
